@@ -1,3 +1,5 @@
+import { useTaskStore } from "@/lib/store";
+
 const Task = ({
   id,
   title,
@@ -12,23 +14,28 @@ const Task = ({
   let borderCardTask = "border-sky-500";
 
   if (status === "TODO") {
-    borderCardTask = "border-sky-500";
-  } else if (status === "IN_PROGRESS") {
     borderCardTask = "border-amber-500";
+  } else if (status === "IN_PROGRESS") {
+    borderCardTask = "border-sky-500";
   } else {
     borderCardTask = "border-emerald-500";
   }
 
+  const removeTask = useTaskStore((state) => state.removeTask);
+  const dragTask = useTaskStore((state) => state.dragTask);
+
   return (
     <div
       className={`mt-3 mx-2 flex cursor-move items-start justify-between rounded-lg bg-white px-3 py-2 text-gray-900 border-2 ${borderCardTask}`}
+      draggable
+      onDrag={() => dragTask(id)}
     >
       <div>
         <h3 className="font-medium text-gray-700">{title}</h3>
         <p className="text-sm font-light text-gray-500">{description}</p>
       </div>
 
-      <button className="cursor-pointer">
+      <button className="cursor-pointer" onClick={() => removeTask(id)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
